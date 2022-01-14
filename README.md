@@ -1,2 +1,3 @@
 # hh-homework-sql
-Repo for hh-homework solution
+
+Решение домашнего задания для школы Хэдхантера.
