@@ -15,7 +15,7 @@ VALUES ('Не требуется'),
 -- Заполняем таблицу работодателей случайными данными.
 INSERT INTO employer (company_type_id, employer_title, employer_address)
 SELECT (random() * (SELECT count(company_type_id) - 1 from company_type))::integer + 1,
-        md5((random() * 10000000)::text),
+       md5((random() * 10000000)::text),
        md5((random() * 10000000)::text)
 FROM generate_series(1, 1000);
 
@@ -35,8 +35,8 @@ INSERT INTO vacancy (vacancy_title, employer_id, profession_id, compensation_fro
                      requirements, responsibilities, working_conditions, skills, area_id, creation_date)
 SELECT md5((random() * 10000000)::text),
        (random() * (SELECT count(e.employer_id) - 1 from employer e))::integer + 1,
-        (random() * (SELECT count(p.profession_id) - 1 from profession p))::integer + 1,
-        90000 + ((random() * 200)::integer) * 1000,
+       (random() * (SELECT count(p.profession_id) - 1 from profession p))::integer + 1,
+       90000 + ((random() * 200)::integer) * 1000,
        0,
        (random() * (SELECT count(we.working_experience_id) - 1 from working_experience we))::integer + 1,
        md5((random() * 10000000)::text),
@@ -50,7 +50,7 @@ FROM generate_series(1, 10000);
 
 -- Дополняем таблицу вакансий данными о максимальном вознаграждении.
 UPDATE vacancy
-SET compensation_to = compensation_from + ((random() * 200)::integer) * 1000
+SET compensation_to = compensation_from + ((random() * 200):: integer) * 1000
 WHERE true;
 
 -- Заполняем таблицу соискателей.
@@ -78,12 +78,13 @@ VALUES ('Не видно никому'),
        ('Видно компаниям-клиентам HeadHunter');
 
 -- Заполняем таблицу резюме случайными данными.
-INSERT INTO summary (summary_title, job_seeker_id, profession_id, employment_id, skills, creation_date)
+INSERT INTO summary (summary_title, area_id, job_seeker_id, profession_id, employment_id, skills, creation_date)
 SELECT md5((random() * 10000000)::text),
-       (random() * (SELECT count(js.job_seeker_id) - 1 from job_seeker js))::integer + 1,
-        (random() * (SELECT count(p.profession_id) - 1 from profession p))::integer + 1,
-        (random() * (SELECT count(e.employment_id) - 1 from employment e))::integer + 1,
-        md5((random() * 10000000)::text),
+       (random() * (SELECT count(a.area_id) - 1 FROM area AS a))::integer + 1,
+       (random() * (SELECT count(js.job_seeker_id) - 1 FROM job_seeker AS js))::integer + 1,
+       (random() * (SELECT count(p.profession_id) - 1 FROM profession AS p))::integer + 1,
+       (random() * (SELECT count(e.employment_id) - 1 FROM employment AS e))::integer + 1,
+       md5((random() * 10000000)::text),
        timestamp '2016-01-01' + interval '1 day' * round(random() * 365 * 2)
 FROM generate_series(1, 100000);
 
@@ -102,7 +103,7 @@ FROM (SELECT vacancy_id AS vacId, random() AS r FROM vacancy) AS v
     SELECT specialty_id AS specId
     FROM specialty
     ORDER BY random()
-        LIMIT v.r * 4 + 1
+    LIMIT v.r * 4 + 1
     ) AS temp
 ORDER BY 1;
 
@@ -116,7 +117,7 @@ FROM (SELECT summary_id AS sumId, random() AS r FROM summary) AS s
     SELECT specialty_id AS specId
     FROM specialty
     ORDER BY random()
-        LIMIT s.r * 4 + 1
+    LIMIT s.r * 4 + 1
     ) AS temp
 ORDER BY 1;
 
@@ -128,8 +129,8 @@ SELECT s.sumId,
        case
            when (v.date >= s.date)
                then v.date + interval '1 day' * round(random() * 56)
-        else s.date + interval '1 day' * round(random() * 56)
-end
+           else s.date + interval '1 day' * round(random() * 56)
+           end
 FROM (SELECT summary_id AS sumId, creation_date AS date, random() AS r FROM summary) AS s
          CROSS JOIN LATERAL (
     SELECT vacancy_id AS vacId, creation_date AS date

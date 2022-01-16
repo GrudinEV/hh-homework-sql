@@ -8,7 +8,7 @@ FROM (
          ORDER BY count DESC
              LIMIT 1
      ) AS max_count_vacancy
-INNER JOIN (
+         INNER JOIN (
     SELECT to_char(creation_date, 'YYYY-MM') AS year_month_summary,
            count(*) AS count
     FROM summary

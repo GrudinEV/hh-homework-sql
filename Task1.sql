@@ -6,11 +6,11 @@ DROP TABLE IF EXISTS summary_specialty;
 DROP TABLE IF EXISTS summary_vacancy;
 DROP TABLE IF EXISTS vacancy_specialty;
 DROP TABLE IF EXISTS vacancy;
+DROP TABLE IF EXISTS summary;
 DROP TABLE IF EXISTS area;
 DROP TABLE IF EXISTS working_experience;
 DROP TABLE IF EXISTS employer;
 DROP TABLE IF EXISTS company_type;
-DROP TABLE IF EXISTS summary;
 DROP TABLE IF EXISTS job_seeker;
 DROP TABLE IF EXISTS employment;
 DROP TABLE IF EXISTS visibility;
@@ -114,12 +114,14 @@ CREATE TABLE summary
 (
     summary_id    SERIAL PRIMARY KEY,
     summary_title TEXT      NOT NULL,
+    area_id       INTEGER   NOT NULL,
     job_seeker_id INTEGER   NOT NULL,
     profession_id INTEGER   NOT NULL,
     employment_id INTEGER,
     skills        TEXT,
     visibility_id INTEGER   NOT NULL DEFAULT 1,
     creation_date TIMESTAMP NOT NULL,
+    FOREIGN KEY (area_id) REFERENCES area (area_id) ON DELETE SET NULL,
     FOREIGN KEY (profession_id) REFERENCES profession (profession_id) ON DELETE CASCADE,
     FOREIGN KEY (visibility_id) REFERENCES visibility (visibility_id) ON DELETE SET DEFAULT,
     FOREIGN KEY (employment_id) REFERENCES employment (employment_id) ON DELETE SET NULL,
